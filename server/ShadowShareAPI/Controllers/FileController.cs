@@ -2,11 +2,11 @@
 using ShadowShareAPI.Core.Data.FormData;
 using ShadowShareAPI.Infrastructure.Data.Repository;
 
-namespace server.Controller;
+namespace ShadowShareAPI.Controller;
 
 [ApiController]
 [Route("api/file/")]
-public class FileController
+public class FileController : Microsoft.AspNetCore.Mvc.Controller
 {
     private readonly IFileRepository _fileRepository;
 
@@ -16,8 +16,15 @@ public class FileController
     }
 
     [HttpPost]
-    public string Upload([FromForm] FileFormData fileForm)
+    public IActionResult Upload([FromForm] FileFormData fileForm)
     {
-        return _fileRepository.Save(fileForm).Result.ToString();
+        return Ok(_fileRepository.Save(fileForm).Result);
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult Download(Guid id)
+    {
+        Core.Data.Models.File? file = _fileRepository.GetFile(id).Result;
+        return file != null ? File(file.Stream, file.ContentType, file.FileName, true) : NotFound();
     }
 }
