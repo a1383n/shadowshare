@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using server.Models;
+using ShadowShareAPI.Core.Data.FormData;
+using ShadowShareAPI.Infrastructure.Data.Repository;
 
 namespace server.Controller;
 
@@ -7,14 +8,16 @@ namespace server.Controller;
 [Route("api/file/")]
 public class FileController
 {
-    public FileController()
-    {
+    private readonly IFileRepository _fileRepository;
 
+    public FileController(IFileRepository fileRepository)
+    {
+        _fileRepository = fileRepository;
     }
 
     [HttpPost]
-    public ActionResult Upload([FromForm] FileFormData fileForm)
+    public string Upload([FromForm] FileFormData fileForm)
     {
-        return new OkResult();
+        return _fileRepository.Save(fileForm).Result.ToString();
     }
 }
