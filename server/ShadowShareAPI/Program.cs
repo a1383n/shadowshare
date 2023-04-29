@@ -1,5 +1,4 @@
 using ShadowShareAPI;
-using ShadowShareAPI.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

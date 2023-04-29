@@ -1,6 +1,4 @@
-﻿using ShadowShareAPI.Infrastructure.Data;
-using ShadowShareAPI.Infrastructure.Data.Repository;
-using ShadowShareAPI.Infrastructure.Services;
+﻿using Data;
 
 namespace ShadowShareAPI;
 
@@ -15,11 +13,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        // Register RedisContext as a singleton service
-        services.AddSingleton(new RedisContext(_configuration));
-
-        services.AddSingleton<IFileService, FileService>();
-        services.AddSingleton<IFileRepository, FileRepository>();
-
+        services.AddSingleton(new ApplicationDatabaseContext(_configuration.GetConnectionString("Redis")));
+        services.AddSingleton<Data.Contracts.IFileRepository, Data.Repositories.FileRepository>();
+        services.AddSingleton<Services.IFileService>(new Services.FileService(_configuration.GetValue<string>("StorageLocation")));
     }
 }
