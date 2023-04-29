@@ -16,9 +16,14 @@ public class FileService : IFileService
         _storageLocation = storageLocation;
     }
 
-    private string GetFilePath(Guid id)
+    private string GetFilePath(Guid id,Guid fileId)
     {
-        return Path.Combine(_storageLocation, id.ToString());
+        return Path.Combine(_storageLocation, id.ToString(),fileId.ToString());
+    }
+
+    private void InitDirectory(Guid id)
+    {
+        Directory.CreateDirectory(Path.Combine(_storageLocation,id.ToString()));
     }
 
     private CryptoStream GetCryptoStream(Stream target, ICryptoTransform transform, CryptoStreamMode streamMode)
@@ -26,9 +31,9 @@ public class FileService : IFileService
         return new CryptoStream(target, transform, streamMode);
     }
 
-    public Task DeleteFileAsync(Guid fileId)
+    public Task DeleteAsync(Guid id)
     {
-        return Task.Run(() => { System.IO.File.Delete(GetFilePath(fileId)); });
+        return Task.Run(() => { System.IO.Directory.Delete(Path.Combine(_storageLocation,id.ToString()),true); });
     }
 
     public CryptoInfo GenerateCryptoInfo(string password)
@@ -36,26 +41,28 @@ public class FileService : IFileService
         return CryptoInfo.Create(password,KEY_SIZE,BLOCK_SIZE,ITERATION);
     }
 
-    public Stream ReadEncryptedFile(Guid fileId, CryptoInfo cryptoInfo)
+    public Stream ReadEncryptedFile(Guid id, Guid fileId, CryptoInfo cryptoInfo)
     {
-        return GetCryptoStream(ReadFile(fileId), cryptoInfo.GetAes().CreateDecryptor(),CryptoStreamMode.Read);
+        return GetCryptoStream(ReadFile(id,fileId), cryptoInfo.GetAes().CreateDecryptor(),CryptoStreamMode.Read);
     }
 
-    public Stream ReadFile(Guid fileId)
+    public Stream ReadFile(Guid id,Guid fileId)
     {
-        return new FileStream(GetFilePath(fileId), FileMode.Open, FileAccess.Read, FileShare.Read);
+        return new FileStream(GetFilePath(id, fileId), FileMode.Open, FileAccess.Read, FileShare.Read);
     }
 
-    public async Task WriteEncryptedFileAsync(Stream stream, Guid fileId, CryptoInfo cryptoInfo)
+    public async Task WriteEncryptedFileAsync(Stream stream,Guid id, Guid fileId, CryptoInfo cryptoInfo)
     {
-        using FileStream fileStream = new(GetFilePath(fileId), FileMode.CreateNew, FileAccess.Write, FileShare.Write);
+        InitDirectory(id);
+        using FileStream fileStream = new(GetFilePath(id, fileId), FileMode.CreateNew, FileAccess.Write, FileShare.Write);
         using CryptoStream cryptoStream = GetCryptoStream(fileStream, cryptoInfo.GetAes().CreateEncryptor(), CryptoStreamMode.Write);
         await stream.CopyToAsync(cryptoStream);
     }
 
-    public async Task WriteFileAsync(Stream stream, Guid fileId)
+    public async Task WriteFileAsync(Stream stream, Guid id, Guid fileId)
     {
-        using FileStream fileStream = new(GetFilePath(fileId),FileMode.CreateNew,FileAccess.Write,FileShare.Write);
+        InitDirectory(id);
+        using FileStream fileStream = new(GetFilePath(id, fileId),FileMode.CreateNew,FileAccess.Write,FileShare.Write);
         await stream.CopyToAsync(fileStream);
     }
 
