@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{B23C7480-0DE8-4674-AAD9-1DBE89FACE72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{670F3F09-8656-4DDB-BDCC-4C5305CDF431}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{670F3F09-8656-4DDB-BDCC-4C5305CDF431}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanerService", "CleanerService\CleanerService.csproj", "{C08AE7CC-B2B9-4BA0-BEEE-AB5544B98EAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{670F3F09-8656-4DDB-BDCC-4C5305CDF431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{670F3F09-8656-4DDB-BDCC-4C5305CDF431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{670F3F09-8656-4DDB-BDCC-4C5305CDF431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C08AE7CC-B2B9-4BA0-BEEE-AB5544B98EAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C08AE7CC-B2B9-4BA0-BEEE-AB5544B98EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C08AE7CC-B2B9-4BA0-BEEE-AB5544B98EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C08AE7CC-B2B9-4BA0-BEEE-AB5544B98EAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

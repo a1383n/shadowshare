@@ -37,11 +37,11 @@ public class FileController : Microsoft.AspNetCore.Mvc.Controller
         if (fileCollection.IsEncrypted)
         {
             fileCollection.CryptoInfo = _service.GenerateCryptoInfo(fileForm.Password!);
-            files.ForEach((i) => files.ForEach((i) => _service.WriteEncryptedFileAsync(i.Stream, i.FileInfo.Id, fileCollection.CryptoInfo)));
+            files.ForEach((i) => files.ForEach((i) => _service.WriteEncryptedFileAsync(i.Stream,fileCollection.Id, i.FileInfo.Id, fileCollection.CryptoInfo)));
         }
         else
         {
-            files.ForEach((i) => files.ForEach((i) => _service.WriteFileAsync(i.Stream, i.FileInfo.Id)));
+            files.ForEach((i) => files.ForEach((i) => _service.WriteFileAsync(i.Stream,fileCollection.Id, i.FileInfo.Id)));
         }
 
         _repository.SetAsync(fileCollection);
@@ -71,7 +71,7 @@ public class FileController : Microsoft.AspNetCore.Mvc.Controller
                     if (password != null)
                     {
                         result.CryptoInfo!.SetPassword(password);
-                        using var cryptoStream = _service.ReadEncryptedFile(fileId, result.CryptoInfo!);
+                        using var cryptoStream = _service.ReadEncryptedFile(result.Id, fileInfo.Id, result.CryptoInfo!);
                         var memoryStream = new MemoryStream();
 
                         try
@@ -101,7 +101,7 @@ public class FileController : Microsoft.AspNetCore.Mvc.Controller
                 }
                 else
                 {
-                    return File(_service.ReadFile(fileId), fileInfo.ContentType, fileInfo.Name, true);
+                    return File(_service.ReadFile(result.Id,fileId), fileInfo.ContentType, fileInfo.Name, true);
                 }
             }
             else
