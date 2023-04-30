@@ -1,0 +1,58 @@
+version: "3"
+
+volumes:
+  storage:
+
+services:
+  webserver:
+    image: nginx:stable
+    container_name: "Webserver"
+    restart: unless-stopped
+    environment:
+      TZ: "Asia/Tehran"
+    ports:
+      - "80:80"
+      - "443:443"
+
+
+  redis:
+    image: redis:7.0
+    container_name: "Redis"
+    restart: unless-stopped
+    environment:
+      TZ: "Asia/Tehran"
+    ports:
+      - "6379:6379"
+
+  app:
+    build:
+      context: server
+      dockerfile: ShadowShareAPI/Dockerfile
+    image: shadowshare_api:0.0.0-alpha
+    container_name: "API"
+    restart: unless-stopped
+    environment:
+      TZ: "Asia/Tehran"
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ConnectionStrings__DefaultConnection: "redis:6379"
+      StorageLocation: "/mnt/storage"
+    volumes:
+      - "storage:/mnt/storage"
+    ports:
+      - "80:80"
+    depends_on:
+      - redis
+
+  cleaner:
+    build:
+      context: server
+      dockerfile: CleanerService/Dockerfile
+    image: shadowshare_cleaner:0.0.0-alpha
+    container_name: "Cleaner"
+    restart: unless-stopped
+    environment:
+      TZ: "Asia/Tehran"
+      REDIS_CONNECTION_STRING: "redis:6379"
+      STORAGE_LOCATION: "/mnt/storage"
+    volumes:
+      - "storage:/mnt/storage"
