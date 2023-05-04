@@ -1,6 +1,8 @@
 import React from 'react'
 import {Disclosure, Transition} from '@headlessui/react'
 import {Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
+import {classNames} from "@/utils/utils";
+import Image from "next/image";
 
 interface NavbarProps {
     menuItems: MenuItem[]
@@ -10,10 +12,6 @@ interface MenuItem {
     name: string,
     href?: string,
     isCurrent?: boolean
-}
-
-function classNames(...classes: string[]): string {
-    return classes.filter(Boolean).join(' ')
 }
 
 export default function Navbar(props: NavbarProps) {
@@ -31,16 +29,20 @@ export default function Navbar(props: NavbarProps) {
                         </Disclosure.Button>
                     </div>
                     <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                        <div className="flex flex-shrink-0 items-center space-x-16">
-                            <img
-                                className="block h-8 w-auto lg:hidden"
-                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                                alt="Your Company"
+                        <div className="flex flex-shrink-0 items-center me-6">
+                            <Image
+                                width={150}
+                                height={150}
+                                className="h-8 w-auto sm:hidden"
+                                src="/logo.png"
+                                alt="فایل باکس"
                             />
-                            <img
-                                className="hidden h-8 w-auto lg:block"
-                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                                alt="Your Company"
+                            <Image
+                                width={500}
+                                height={150}
+                                className="hidden h-8 w-auto sm:block"
+                                src="/logo_full.png"
+                                alt="فایل باکس"
                             />
                         </div>
                         <div className="hidden sm:ml-6 sm:block">

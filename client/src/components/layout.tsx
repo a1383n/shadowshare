@@ -1,6 +1,7 @@
 import Navbar from "@/components/navbar";
 import {Vazirmatn} from "next/font/google";
 import {ReactNode} from "react";
+import {Toaster} from "react-hot-toast";
 
 const vazirmatn = Vazirmatn({
     variable: '--font-vazir',
@@ -21,6 +22,7 @@ export default function Layout(props: Props) {
                     {name: "درباره ما"}
                 ]}/>
                 <div>
+                    <div><Toaster/></div>
                     {props.children}
                 </div>
             </div>
