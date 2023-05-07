@@ -3,7 +3,7 @@ import {Vazirmatn} from "next/font/google";
 import {ReactNode} from "react";
 import {Toaster} from "react-hot-toast";
 
-const vazirmatn = Vazirmatn({
+export const vazirmatn = Vazirmatn({
     variable: '--font-vazir',
     subsets: ['arabic']
 });

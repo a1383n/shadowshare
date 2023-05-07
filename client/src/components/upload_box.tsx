@@ -1,15 +1,17 @@
 import {classNames} from "@/utils/utils";
-import {DropzoneProps, useDropzone} from "react-dropzone";
+import {DropzoneState} from "react-dropzone";
 
-export default function UploadBox(props?: DropzoneProps) {
-    const dropZone = useDropzone(props);
+interface Props {
+    dropZoneState: DropzoneState
+}
 
+export default function UploadBox(props: Props) {
     return (
-        <div {...dropZone.getRootProps({className: classNames("h-96 flex flex-col justify-center outline outline-8 outline-primary border-dashed border-4 border-blue-700", dropZone.isDragActive ? "bg-indigo-400" : "")})}>
+        <div {...props.dropZoneState.getRootProps({className: classNames("h-96 flex flex-col justify-center outline outline-8 outline-primary border-dashed border-4 border-blue-700", props.dropZoneState.isDragActive ? "bg-indigo-400" : "")})}>
             <div className="flex-shrink">
-                <input {...dropZone.getInputProps()}/>
+                <input {...props.dropZoneState.getInputProps()}/>
                 <div
-                    className={dropZone.isDragActive ? "hidden" : "flex flex-col items-center justify-between gap-y-3"}>
+                    className={props.dropZoneState.isDragActive ? "hidden" : "flex flex-col items-center justify-between gap-y-3"}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24" strokeWidth={1.5}
                          stroke="currentColor" className="w-16 h-16 stroke-primary fill-transparent mb-2">
                         <path strokeLinecap="round" strokeLinejoin="round"
@@ -20,17 +22,17 @@ export default function UploadBox(props?: DropzoneProps) {
                     <span className="hidden lg:block text-gray-500">یا اینکه</span>
                     <button
                         className="hidden hover:bg-primary hover:text-white transition lg:block outline outline-primary px-10 py-2 rounded-sm text-primary"
-                        onClick={dropZone.open}>
+                        onClick={props.dropZoneState.open}>
                         فایل را انتخاب کنید
                     </button>
                     <button
                         className="lg:hidden hover:bg-primary hover:text-white transition outline outline-primary px-10 py-2 rounded-sm text-primary"
-                        onClick={dropZone.open}>
+                        onClick={props.dropZoneState.open}>
                         انتخاب فایل
                     </button>
                 </div>
                 <div
-                    className={dropZone.isDragActive ? "flex flex-col items-center justify-between gap-y-6" : "hidden"}>
+                    className={props.dropZoneState.isDragActive ? "flex flex-col items-center justify-between gap-y-6" : "hidden"}>
                     <span className="text-white text-xl">رها کنید!</span>
                 </div>
             </div>
