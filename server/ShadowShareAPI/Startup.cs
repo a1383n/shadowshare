@@ -4,17 +4,45 @@ namespace ShadowShareAPI;
 
 public class Startup
 {
-    private readonly IConfiguration _configuration;
+    public IConfiguration Configuration { get; }
 
     public Startup(IConfiguration configuration)
     {
-        _configuration = configuration;
+        Configuration = configuration;
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton(new ApplicationDatabaseContext(_configuration.GetConnectionString("Redis")));
+        services.AddControllers();
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+
+        string connectionString = Configuration.GetConnectionString("DefaultConnection");
+        string defaultStorageLocation = Configuration.GetValue("StorageLocation","/mnt/storage");
+
+        services.AddSingleton(new ApplicationDatabaseContext(connectionString));
         services.AddSingleton<Data.Contracts.IFileRepository, Data.Repositories.FileRepository>();
-        services.AddSingleton<Services.IFileService>(new Services.FileService(_configuration.GetValue<string>("StorageLocation")));
+        services.AddSingleton<Services.IFileService>(new Services.FileService(defaultStorageLocation));
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+        else
+        {
+            // Configure error handling for other environments
+            // For example: app.UseExceptionHandler("/Home/Error");
+        }
+
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }
