@@ -35,6 +35,9 @@ export default function Home() {
             <UploadDialog
                 selectedFiles={files}
                 isDialogOpen={isDialogOpen}
+                onUploadComplete={id => {
+                    console.log(id);
+                }}
                 onDialogClosed={() => {
                     setFiles([]);
                     setIsDialogOpen(false)

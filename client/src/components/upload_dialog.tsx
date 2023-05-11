@@ -24,6 +24,7 @@ import {uploadFiles} from "@/api/file";
 interface Props {
     isDialogOpen: boolean;
     selectedFiles: File[];
+    onUploadComplete: (id: string) => void;
     onDialogClosed: () => void;
     onFileSelected: (files: File[]) => void;
 }
@@ -133,11 +134,19 @@ export default function UploadDialog(props: Props) {
                                     initialValues={{
                                         duration: "m",
                                         duration_value: 15,
-                                        max_download: 5
+                                        max_download: 5,
+                                        password: undefined,
+                                        description: undefined
                                     }}
                                     validationSchema={formSchema}
                                     onSubmit={(values, formikHelpers) => {
-                                        const promise = uploadFiles(values)
+                                        const promise = uploadFiles({
+                                            files: props.selectedFiles,
+                                            expireAt: values.duration_value + values.duration,
+                                            expireWith: values.max_download,
+                                            password: values.password,
+                                            description: values.description
+                                        })
                                         toast.promise(promise,{
                                             loading: "درحال آپلود...",
                                             success: "با موفقیت آپلود شد",
@@ -145,6 +154,7 @@ export default function UploadDialog(props: Props) {
                                         })
                                             .then(value => {
                                                 console.log(value);
+                                                props.onUploadComplete(value.data.data.id);
                                             })
                                             .catch(reason => {
                                                 console.log(reason);
