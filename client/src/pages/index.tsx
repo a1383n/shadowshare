@@ -57,7 +57,7 @@ export default function Home() {
                 }}
             />
             <div className="px-6 py-12 md:px-12 text-center lg:text-start">
-                <div className="container mx-auto">
+                <div className="container mx-auto my-5 mb-24">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div className="mt-12 lg:mt-0 xl:ps-10">
                             <div className="text-4xl xl:text-5xl font-bold tracking-tight mb-6">

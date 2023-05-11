@@ -1,17 +1,12 @@
 import React from 'react'
 import {Disclosure, Transition} from '@headlessui/react'
 import {Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
-import {classNames} from "@/utils/utils";
 import Image from "next/image";
+import {MenuItem} from "@/components/layout/layout";
+import Link from "next/link";
 
 interface NavbarProps {
     menuItems: MenuItem[]
-}
-
-interface MenuItem {
-    name: string,
-    href?: string,
-    isCurrent?: boolean
 }
 
 export default function Navbar(props: NavbarProps) {
@@ -48,17 +43,12 @@ export default function Navbar(props: NavbarProps) {
                         <div className="hidden sm:ml-6 sm:block">
                             <div className="flex gap-x-4">
                                 {
-                                    props.menuItems.map(item => (
-                                        <a
-                                            key={item.name}
-                                            href={item.href ?? "#"}
-                                            className={classNames(
-                                                'text-black hover:bg-gray-700 hover:text-white',
-                                                'rounded-md px-3 py-2 text-sm font-medium'
-                                            )}
-                                        >
-                                            {item.name}
-                                        </a>
+                                    props.menuItems.map((value, index) => (
+                                        <div
+                                            key={index}
+                                            className="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">
+                                            <Link {...value.props}>{value.title}</Link>
+                                        </div>
                                     ))
                                 }
                             </div>
@@ -78,15 +68,13 @@ export default function Navbar(props: NavbarProps) {
             >
                 <Disclosure.Panel className="sm:hidden">
                     <div className="space-y-1 px-2 pb-3 pt-2">
-                        {props.menuItems.map((item) => (<Disclosure.Button
-                            key={item.name}
-                            as="a"
-                            href={item.href}
-                            className={classNames(item.isCurrent ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium')}
-                            aria-current={item.isCurrent ? 'page' : undefined}
-                        >
-                            {item.name}
-                        </Disclosure.Button>))}
+                        {props.menuItems.map((item, index) => (
+                            <Disclosure.Button
+                                key={index}
+                                className="text-black w-full text-start hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+                            >
+                                <Link {...item.props}>{item.title}</Link>
+                            </Disclosure.Button>))}
                     </div>
                 </Disclosure.Panel>
             </Transition>

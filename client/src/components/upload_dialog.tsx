@@ -1,6 +1,6 @@
 import {Dialog, Disclosure, Transition} from "@headlessui/react";
 import React, {Fragment, useRef} from "react";
-import {vazirmatn} from "@/components/layout";
+import {vazirmatn} from "@/components/layout/layout";
 import {
     classNames,
     compressedFileTypes,
