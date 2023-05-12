@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import {classNames, getRejectInfo} from "@/utils/utils";
+import {classNames, getRejectInfo} from "../../lib/utils/utils";
 import UploadDialog from "@/components/upload_dialog";
 import {useDropzone} from "react-dropzone";
 import {useState} from "react";

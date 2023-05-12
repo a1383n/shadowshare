@@ -9,7 +9,7 @@ import {
     getRejectInfo,
     imageMimeTypes,
     textMimeTypes
-} from "@/utils/utils";
+} from "../../lib/utils/utils";
 import {useDropzone} from "react-dropzone";
 import zipIcon from "../../public/icon/file_zip.svg"
 import imageIcon from "../../public/icon/file_image.svg"
@@ -19,7 +19,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import {number, object, string} from "yup";
 import {ErrorMessage, Field, Form, Formik} from "formik";
-import {uploadFiles} from "@/api/file";
+import FileService from "../../lib/api/service/FileService";
 
 interface Props {
     isDialogOpen: boolean;
@@ -71,6 +71,7 @@ const formSchema = object().shape({
 });
 
 export default function UploadDialog(props: Props) {
+    const fileService = new FileService("/api");
     const cancelButtonRef = useRef(null);
 
     const dropZoneState = useDropzone({
@@ -140,13 +141,13 @@ export default function UploadDialog(props: Props) {
                                     }}
                                     validationSchema={formSchema}
                                     onSubmit={(values, formikHelpers) => {
-                                        const promise = uploadFiles({
-                                            files: props.selectedFiles,
-                                            expireAt: values.duration_value + values.duration,
-                                            expireWith: values.max_download,
-                                            password: values.password,
-                                            description: values.description
-                                        })
+                                        const promise = fileService!.uploadFiles({
+                                            Files: props.selectedFiles,
+                                            DeleteAfter: values.duration_value + values.duration,
+                                            DeleteWithDownloadCount: values.max_download,
+                                            Password: values.password,
+                                            Description: values.description
+                                        });
                                         toast.promise(promise,{
                                             loading: "درحال آپلود...",
                                             success: "با موفقیت آپلود شد",
@@ -154,7 +155,7 @@ export default function UploadDialog(props: Props) {
                                         })
                                             .then(value => {
                                                 console.log(value);
-                                                props.onUploadComplete(value.data.data.id);
+
                                             })
                                             .catch(reason => {
                                                 console.log(reason);

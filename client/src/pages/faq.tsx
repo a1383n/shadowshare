@@ -1,5 +1,5 @@
 import {Disclosure, Transition} from "@headlessui/react";
-import {classNames} from "@/utils/utils";
+import {classNames} from "../../lib/utils/utils";
 import faqData from "../../data/faq.json";
 
 export default function Faq() {
