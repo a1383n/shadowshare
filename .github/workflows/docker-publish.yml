@@ -22,14 +22,14 @@ jobs:
       matrix:
         include:
           - image_name: "frontend"
-            context: "client"
-            file: "Dockerfile"
+            context: "./client"
+            file: "./client/Dockerfile"
           - image_name: "backend"
-            context: "server"
-            file: "ShadowShareAPI/Dockerfile"
+            context: "./server"
+            file: "./server/ShadowShareAPI/Dockerfile"
           - image_name: "cleaner"
-            context: "server"
-            file: "CleanerService/Dockerfile"
+            context: "./server"
+            file: "./server/CleanerService/Dockerfile"
             
     runs-on: ubuntu-latest
     
