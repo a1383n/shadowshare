@@ -20,8 +20,14 @@ jobs:
   build-and-push:
     strategy:
       matrix:
-        image_name: ["frontend", "backend", "cleaner"]
-        location: ["client", "server/ShadowShareAPI", "server/CleanerService"]
+        include:
+          - image_name: "frontend"
+            location: "client"
+          - image_name: "backend"
+            location: "server/ShadowShareAPI"
+          - image_name: "cleaner"
+            location: "server/CleanerService"
+            
     runs-on: ubuntu-latest
     
     permissions:
