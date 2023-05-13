@@ -154,8 +154,11 @@ export default function UploadDialog(props: Props) {
                                             error: (e) => "خطا\n" + e
                                         })
                                             .then(value => {
-                                                console.log(value);
-
+                                                if (value.data.isSuccess === true) {
+                                                    props.onUploadComplete(value.data.data.id);
+                                                }else {
+                                                    throw value.data;
+                                                }
                                             })
                                             .catch(reason => {
                                                 console.log(reason);

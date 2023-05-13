@@ -3,10 +3,13 @@ import {classNames, getRejectInfo} from "../../lib/utils/utils";
 import UploadDialog from "@/components/upload_dialog";
 import {useDropzone} from "react-dropzone";
 import {useState} from "react";
+import UploadResultDialog from "@/components/upload_result_dialog";
 
 export default function Home() {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [files,setFiles] = useState<File[]>([]);
+    const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+    const [isUploadResultDialogOpen, setIsUploadResultDialogOpen] = useState(false);
+    const [uploadResult, setUploadResult] = useState<string>();
+    const [files, setFiles] = useState<File[]>([]);
 
     const dropZoneState = useDropzone({
         onDropRejected: fileRejections => {
@@ -19,9 +22,9 @@ export default function Home() {
             }
 
             setFiles(prevState => prevState.concat(acceptedFiles));
-            setIsDialogOpen(true);
+            setIsUploadDialogOpen(true);
 
-            console.log("States are set",acceptedFiles,files,isDialogOpen);
+            console.log("States are set", acceptedFiles, files, isUploadDialogOpen);
         },
         maxFiles: 3,
         maxSize: 10 * 1024 * 1024,
@@ -32,15 +35,24 @@ export default function Home() {
 
     return (
         <>
+            <UploadResultDialog
+                result={uploadResult}
+                isDialogOpen={isUploadResultDialogOpen}
+                onDialogClosed={() => {
+                    setIsUploadResultDialogOpen(false)
+                }}/>
             <UploadDialog
                 selectedFiles={files}
-                isDialogOpen={isDialogOpen}
+                isDialogOpen={isUploadDialogOpen}
                 onUploadComplete={id => {
                     console.log(id);
+                    setIsUploadDialogOpen(false);
+                    setUploadResult(id);
+                    setIsUploadResultDialogOpen(true)
                 }}
                 onDialogClosed={() => {
                     setFiles([]);
-                    setIsDialogOpen(false)
+                    setIsUploadDialogOpen(false)
                 }}
                 onFileSelected={files1 => {
                     const total = files.concat(files1);
@@ -48,7 +60,7 @@ export default function Home() {
                         toast.error("تعداد فایل ها بیشتر از حد مجاز است")
                     } else if (total.map(value => value.size).reduce((previousValue, currentValue) => previousValue + currentValue) > 10 * 1024 * 1024) {
                         toast.error("حجم کل فایل ها بیشتر از حد مجاز است.");
-                    }else {
+                    } else {
                         if (files1.length > 0) {
                             toast.success(`${files1.length.toString().toPersianNumber()} فایل افزوده شد `)
                         }
@@ -111,8 +123,10 @@ export default function Home() {
                                     <input {...dropZoneState.getInputProps()}/>
                                     <div
                                         className={dropZoneState.isDragActive ? "hidden" : "flex flex-col items-center justify-between gap-y-3"}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24" strokeWidth={1.5}
-                                             stroke="currentColor" className="w-16 h-16 stroke-primary fill-transparent mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"
+                                             strokeWidth={1.5}
+                                             stroke="currentColor"
+                                             className="w-16 h-16 stroke-primary fill-transparent mb-2">
                                             <path strokeLinecap="round" strokeLinejoin="round"
                                                   d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"/>
                                         </svg>
