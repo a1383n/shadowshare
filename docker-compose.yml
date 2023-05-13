@@ -14,6 +14,7 @@ services:
     ports:
       - "80:80"
     volumes:
+      - "./docker/nginx/nginx.conf:/etc/nginx/nginx.conf"
       - "./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf"
     depends_on:
       - frontend
@@ -25,11 +26,9 @@ services:
     restart: unless-stopped
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     volumes:
-      - "./docker/redis/redis.conf:/usr/local/etc/redis.conf"
+      - "./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf"
     environment:
       TZ: "Asia/Tehran"
-    ports:
-      - "6379:6379"
 
   frontend:
     build:
@@ -41,6 +40,7 @@ services:
     environment:
       TZ: "Asia/Tehran"
       NODE_ENV: "production"
+      EXTERNAL_SERVICE_URL: "http://backend:80"
     depends_on:
       - backend
 
