@@ -29,12 +29,12 @@ interface Props {
     onFileSelected: (files: File[]) => void;
 }
 
-function getFileTypeIcon(file: File): JSX.Element {
-    if (compressedFileTypes.includes(file.type)) {
+export function getFileTypeIcon(contentType: string): JSX.Element {
+    if (compressedFileTypes.includes(contentType)) {
         return <Image src={zipIcon} alt={"Compressed File"}/>
-    } else if (imageMimeTypes.includes(file.type)) {
+    } else if (imageMimeTypes.includes(contentType)) {
         return <Image src={imageIcon} alt={"Image File"}/>
-    } else if (textMimeTypes.includes(file.type)) {
+    } else if (textMimeTypes.includes(contentType)) {
         return <Image src={textIcon} alt={"Text File"}/>
     } else {
         return <Image src={unknownIcon} alt={"Unknown File"}/>
@@ -228,7 +228,7 @@ export default function UploadDialog(props: Props) {
                                                                                                     className="flex flex-row w-full p-3 rounded justify-between items-center bg-white">
                                                                                                     <div
                                                                                                         className="flex items-center gap-x-3">
-                                                                                                        {getFileTypeIcon(item)}
+                                                                                                        {getFileTypeIcon(item.type)}
                                                                                                         <span
                                                                                                             className="font-mono"
                                                                                                             title={item.name}>{formatFileName(item.name)}</span>
@@ -402,6 +402,7 @@ export default function UploadDialog(props: Props) {
                                                                                             name="password"
                                                                                             id="password"
                                                                                             type="password"
+                                                                                            autocomplete="new-password"
                                                                                             placeholder={"حداقل 4 و حداکثر 32 کاراکتر (اختیاری)".toPersianNumber()}
                                                                                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                                         />

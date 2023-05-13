@@ -1,5 +1,5 @@
 import axios, {AxiosProgressEvent, AxiosResponse} from 'axios';
-import {FileDto, FileDtoConverter} from "../model/file";
+import {FileDto, FileDtoConverter, FileModel} from "../model/file";
 
 export default class FileService {
     private readonly apiUrl: string;
@@ -26,5 +26,33 @@ export default class FileService {
         } catch (error: any) {
             throw new Error(error);
         }
+    }
+
+    async getFileInfo(id: string): Promise<FileModel> {
+        try {
+            return (await axios.get(`${this.apiUrl}/file/${id}/info`)).data.data;
+        } catch (error: any) {
+            throw new Error(error);
+        }
+    }
+
+    async downloadFile(id: string, fileId: string, password?: string): Promise<Blob | boolean> {
+        const formdata = new FormData();
+        if (password && password.trim() !== '') {
+            formdata.append("Password", password);
+        }
+        try {
+            const value = await axios.post(`${this.apiUrl}/file/${id}/${fileId}`, formdata, {
+                responseType: "blob",
+            });
+            if (value.status === 200) {
+                return new Blob([value.data]);
+            } else {
+                return false;
+            }
+        } catch (error: any) {
+            throw new Error(error);
+        }
+
     }
 }

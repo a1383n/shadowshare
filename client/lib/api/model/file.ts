@@ -39,8 +39,15 @@ export class FileDtoConverter {
 
 export interface FileModel {
     id: string;
-    files: File[];
+    files: {
+        id: string,
+        name: string,
+        contentType: string,
+        size: number,
+        hash: string
+    }[];
     expireAt: string;
     remainingDownloadCount: number;
     isEncrypted: boolean;
+    description?: string
 }

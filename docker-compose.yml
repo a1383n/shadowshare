@@ -40,6 +40,7 @@ services:
     environment:
       TZ: "Asia/Tehran"
       NODE_ENV: "production"
+      EXTERNAL_SERVICE_URL: "http://backend:80"
     depends_on:
       - backend
 
