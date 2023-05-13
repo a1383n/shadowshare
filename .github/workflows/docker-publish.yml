@@ -20,8 +20,17 @@ jobs:
   build-and-push:
     strategy:
       matrix:
-        image_name: ["frontend", "backend", "cleaner"]
-        location: ["client", "server/ShadowShareAPI", "server/CleanerService"]
+        include:
+          - image_name: "frontend"
+            context: "./client"
+            file: "./client/Dockerfile"
+          - image_name: "backend"
+            context: "./server"
+            file: "./server/ShadowShareAPI/Dockerfile"
+          - image_name: "cleaner"
+            context: "./server"
+            file: "./server/CleanerService/Dockerfile"
+            
     runs-on: ubuntu-latest
     
     permissions:
@@ -67,7 +76,8 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
-          context: .
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
           push: ${{ startsWith(github.ref, 'refs/tags/') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
