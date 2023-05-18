@@ -28,7 +28,7 @@ public class FileController : Microsoft.AspNetCore.Mvc.Controller
         var fileCollection = new FileCollection
         {
             ExpireAt = fileForm.GetDeleteAfter(),
-            RemainingDownloadCount = fileForm.DeleteWithDownloadCount,
+            MaximumDownloadCount = fileForm.DeleteWithDownloadCount,
             Description = fileForm.Description,
             IsEncrypted = fileForm.Password != null,
             Files = files.Select(f => f.FileInfo).ToList()
@@ -58,50 +58,52 @@ public class FileController : Microsoft.AspNetCore.Mvc.Controller
         var result = _repository.Get(id.ToString());
         if (result != null)
         {
-            if (result.RemainingDownloadCount == 0)
-            {
-                return ApiResult.NotFound();
-            }
-
             var fileInfo = result.Files.Find((i) => i.Id == fileId);
             if (fileInfo != null)
             {
-                if (result.IsEncrypted)
+                if (fileInfo.DownloadCount < result.MaximumDownloadCount)
                 {
-                    if (password != null)
+                    if (result.IsEncrypted)
                     {
-                        result.CryptoInfo!.SetPassword(password);
-                        using var cryptoStream = _service.ReadEncryptedFile(result.Id, fileInfo.Id, result.CryptoInfo!);
-                        var memoryStream = new MemoryStream();
-
-                        try
+                        if (password != null)
                         {
-                            cryptoStream.CopyTo(memoryStream);
-                            memoryStream.Position = 0;
-                            if (_service.GetFileHash(memoryStream) == fileInfo.Hash)
+                            result.CryptoInfo!.SetPassword(password);
+                            using var cryptoStream = _service.ReadEncryptedFile(result.Id, fileInfo.Id, result.CryptoInfo!);
+                            var memoryStream = new MemoryStream();
+
+                            try
                             {
-                                _repository.DecrementDownloadCountAsync(result.Id.ToString(), fileInfo.Id);
+                                cryptoStream.CopyTo(memoryStream);
                                 memoryStream.Position = 0;
-                                return File(memoryStream, fileInfo.ContentType, fileInfo.Name, true);
+                                if (_service.GetFileHash(memoryStream) == fileInfo.Hash)
+                                {
+                                    _repository.IncrementDownloadCountAsync(result.Id, fileInfo.Id);
+                                    memoryStream.Position = 0;
+                                    return File(memoryStream, fileInfo.ContentType, fileInfo.Name, true);
+                                }
+                                else
+                                {
+                                    return ApiResult.BadRequest("Invalid password");
+                                }
                             }
-                            else
+                            catch (CryptographicException)
                             {
                                 return ApiResult.BadRequest("Invalid password");
                             }
                         }
-                        catch (CryptographicException)
+                        else
                         {
-                            return ApiResult.BadRequest("Invalid password");
+                            return ApiResult.BadRequest("Password not provided.");
                         }
                     }
                     else
                     {
-                        return ApiResult.BadRequest("Password not provided.");
+                        _repository.IncrementDownloadCountAsync(result.Id, fileInfo.Id);
+                        return File(_service.ReadFile(result.Id, fileId), fileInfo.ContentType, fileInfo.Name, true);
                     }
-                }
-                else
+                }else
                 {
-                    return File(_service.ReadFile(result.Id,fileId), fileInfo.ContentType, fileInfo.Name, true);
+                    return ApiResult.BadRequest("Maximum download count was reached");
                 }
             }
             else
