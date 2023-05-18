@@ -42,12 +42,13 @@ export interface FileModel {
     files: {
         id: string,
         name: string,
+        downloadCount: number,
         contentType: string,
         size: number,
         hash: string
     }[];
     expireAt: string;
-    remainingDownloadCount: number;
+    maximumDownloadCount: number;
     isEncrypted: boolean;
     description?: string
 }
