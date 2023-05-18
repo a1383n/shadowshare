@@ -16,18 +16,26 @@ public class FileRepository : Repository<Entities.FileCollection>, IFileReposito
         return _database.StringSetAsync(collection.Id.ToString(), SerializeEntity(collection), null, true, When.Exists);
     }
 
-    public async Task<long> DecrementDownloadCountAsync(RedisKey key, Guid id, uint value = 1)
+    public async Task<long> IncrementDownloadCountAsync(Guid id, Guid fileId, uint value = 1)
     {
-        var collection = await GetAsync(key);
-        if (collection!.RemainingDownloadCount >= value)
+        FileCollection? collection = await GetAsync(id.ToString());
+        if (collection != null)
         {
-            collection!.RemainingDownloadCount -= value;
+            int index = collection.Files.FindIndex((file) => file.Id == fileId);
+            if (index >= 0)
+            {
+                collection.Files[index].DownloadCount += 1;
+                await UpdateAsync(collection);
+                return collection.Files[index].DownloadCount;
+            }
+            else
+            {
+                return -1;
+            }
         }else
         {
-            collection!.RemainingDownloadCount = 0;
+            return -1;
         }
-
-        return await UpdateAsync(collection) ? collection.RemainingDownloadCount : -1;
     }
 
     public Task<bool> SetAsync(FileCollection collection)

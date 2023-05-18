@@ -16,7 +16,7 @@ public class FileCollection : BaseRedisEntity
     public TimeSpan ExpireAt { get; set; }
 
     [JsonPropertyOrder(3)]
-    public uint RemainingDownloadCount { get; set; }
+    public uint MaximumDownloadCount { get; set; }
 
     [JsonPropertyOrder(5)]
     public bool IsEncrypted { get; set; } = false;

@@ -23,6 +23,10 @@ export default function DownloadPage(props: Props) {
         }
     }, [props.model])
 
+    const isFileAvailable = (item: any) => {
+        return props.model.maximumDownloadCount > item.downloadCount;
+    };
+
     return (
         <>
             <PasswordDialog isDialogOpen={isPasswordDialogOpen} onDialogClosed={password => {
@@ -45,49 +49,64 @@ export default function DownloadPage(props: Props) {
                                     .map((item, index) => (
                                         <div
                                             key={index}
-                                            className="flex flex-row w-full p-3 rounded justify-between items-center bg-white">
-                                            <div
-                                                className="flex items-center gap-x-3">
+                                            title={!isFileAvailable(item) ? 'فایل در دسترس نیست' : ''}
+                                            className={`flex flex-row w-full p-3 rounded justify-between items-center ${
+                                                isFileAvailable(item) ? 'bg-white' : 'bg-gray-300 cursor-not-allowed filter blur'
+                                            }`}
+                                        >
+                                            <div className={`flex items-center gap-x-3`}>
                                                 {getFileTypeIcon(item.contentType)}
-                                                <span
-                                                    className="font-mono"
-                                                    title={item.name}>{formatFileName(item.name)}</span>
+                                                <span className="font-mono" title={item.name}>
+                                            {formatFileName(item.name)}
+                                            </span>
                                             </div>
                                             <span>{formatBytes(item.size).toPersianNumber()}</span>
                                             <div
-                                                className="group p-2 rounded-full hover:cursor-pointer hover:bg-primary"
+                                                className={`group p-2 rounded-full hover:cursor-pointer ${
+                                                    isFileAvailable(item) ? 'hover:bg-primary' : 'opacity-50 cursor-not-allowed'
+                                                }`}
                                                 onClick={() => {
-                                                    const promise = service.downloadFile(props.model.id, item.id, password);
-                                                    toast.promise(promise,{
-                                                        success: "فایل با موفقیت دانلود شد.",
-                                                        error: "کلمه عبور اشتباه است",
-                                                        loading: "در حال دانلود..."
-                                                    })
-                                                        .then(value => {
-                                                            if (value !== false) {
-                                                                const url = window.URL.createObjectURL(value as Blob);
-                                                                const link = document.createElement('a');
-                                                                link.href = url;
-                                                                link.setAttribute('download', item.name);
-                                                                document.body.appendChild(link);
-                                                                link.click();
-                                                                document.body.removeChild(link);
-                                                            }
+                                                    if (isFileAvailable(item)) {
+                                                        const promise = service.downloadFile(props.model.id, item.id, password);
+                                                        toast.promise(promise, {
+                                                            success: 'فایل با موفقیت دانلود شد.',
+                                                            error: 'کلمه عبور اشتباه است',
+                                                            loading: 'در حال دانلود...',
                                                         })
-                                                        .catch(reason => {
-                                                            setPasswordDialogOpen(true);
-                                                            console.log(reason);
-                                                        })
-
-                                                }}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                     strokeWidth={1.5} stroke="currentColor"
-                                                     className="w-6 h-6 group-hover:stroke-white">
+                                                            .then((value) => {
+                                                                if (value !== false) {
+                                                                    const url = window.URL.createObjectURL(value as Blob);
+                                                                    const link = document.createElement('a');
+                                                                    link.href = url;
+                                                                    link.setAttribute('download', item.name);
+                                                                    document.body.appendChild(link);
+                                                                    link.click();
+                                                                    document.body.removeChild(link);
+                                                                }
+                                                            })
+                                                            .catch((reason) => {
+                                                                setPasswordDialogOpen(true);
+                                                                console.log(reason);
+                                                            });
+                                                    }
+                                                }}
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth={1.5}
+                                                    stroke="currentColor"
+                                                    className={`w-6 h-6 group-hover:stroke-white ${
+                                                        isFileAvailable(item) ? '' : 'text-gray-500'
+                                                    }`}
+                                                >
                                                     <path strokeLinecap="round" strokeLinejoin="round"
                                                           d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
                                                 </svg>
                                             </div>
                                         </div>
+
                                     ))
                             }
                         </div>
