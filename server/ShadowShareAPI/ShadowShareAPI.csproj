@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
-    <PackageReference Include="StackExchange.Redis" Version="2.7.10" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.27" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
