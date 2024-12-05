@@ -1,5 +1,5 @@
 import {Dialog, Disclosure, Transition} from "@headlessui/react";
-import React, {Fragment, useRef} from "react";
+import React, {Fragment, ReactNode, useRef} from "react";
 import {vazirmatn} from "@/components/layout/layout";
 import {
     classNames,
@@ -29,7 +29,7 @@ interface Props {
     onFileSelected: (files: File[]) => void;
 }
 
-export function getFileTypeIcon(contentType: string): JSX.Element {
+export function getFileTypeIcon(contentType: string): ReactNode {
     if (compressedFileTypes.includes(contentType)) {
         return <Image src={zipIcon} alt={"Compressed File"}/>
     } else if (imageMimeTypes.includes(contentType)) {

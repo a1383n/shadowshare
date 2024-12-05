@@ -37,12 +37,12 @@ export default class FileService {
     }
 
     async downloadFile(id: string, fileId: string, password?: string): Promise<Blob | boolean> {
-        const formdata = new FormData();
+        const formData = new FormData();
         if (password && password.trim() !== '') {
-            formdata.append("Password", password);
+            formData.append("Password", password);
         }
         try {
-            const value = await axios.post(`${this.apiUrl}/file/${id}/${fileId}`, formdata, {
+            const value = await axios.post(`${this.apiUrl}/file/${id}/${fileId}`, formData, {
                 responseType: "blob",
             });
             if (value.status === 200) {

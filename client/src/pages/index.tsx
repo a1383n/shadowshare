@@ -173,14 +173,14 @@ export default function Home() {
                     <p className="text-2xl font-bold mb-3">آپلود فایل ها به صورت رایگان، بدون ثبت نام</p>
                     <p className="text-lg text-gray-400">آپلود فایل ها، اشتراک گذاری و ذخیره سازی فایل را آسان و ساده می کند. <br/>فضای ذخیره سازی ابری رمزگذاری شده ما از جدیدترین تکنیک های امنیتی استفاده میکند <br/>تا داده های شما را همیشه ایمن و محافظت کند.</p>
                 </div>
-                <div className="grid grid-cols-1">
+                <div className="grid grid-cols-1 gap-y-12">
                     <div className="flex flex-row justify-between items-center">
                         <div className="text-start">
                             <p className="text-2xl font-bold mb-3">هر نوع فایل را آپلود کنید!</p>
                             <p className="text-lg text-gray-400">هیچ محدودیتی در مورد نوع فایلی که می توانید در فایل باکس <br/>به طور رایگان آپلود کنید وجود ندارد. <br/>تنهای محدودیت که وجود دارد، محدودیت حجم فایل ها است.</p>
                         </div>
                         <div>
-                            <svg width="250" height="250" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg className="w-36 sm:w-60" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g filter="url(#filter0_d_0_1)">
                                     <rect x="100" y="100" width="160" height="160" rx="20" fill="#EC605F"/>
                                 </g>
@@ -206,7 +206,7 @@ export default function Home() {
                             <p className="text-lg text-gray-400">بدون تبلیغات پاپ آپ، بدون بدافزار هایی که میتوانند <br/>سیستم شما را به بدافزار آلوده کنند. ما به شما این اطمینان را میدهیم <br/>که میتوانید بدون توجه به مدت زمانی که در فایل باکس <br/>صرف میکنید، ایمن بمانید.</p>
                         </div>
                         <div>
-                            <svg width="250" height="250" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg className="w-36 sm:w-60" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g filter="url(#filter0_d_0_1)">
                                     <rect x="100" y="100" width="160" height="160" rx="20" fill="#606CEC"/>
                                 </g>
@@ -232,7 +232,7 @@ export default function Home() {
                             <p className="text-lg text-gray-400">در فایل باکس برای استفاده از امکانات سایت <br/>و آپلود فایل نیازی به ثبت نام ندارید.</p>
                         </div>
                         <div>
-                            <svg width="250" height="250" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg className="w-36 sm:w-60" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g filter="url(#filter0_d_0_1)">
                                     <rect x="100" y="100" width="160" height="160" rx="20" fill="#32A2E1"/>
                                 </g>
