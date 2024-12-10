@@ -8,8 +8,8 @@ public class CryptoInfo
 {
     [JsonIgnore]
     private byte[]? Key { get; set; }
-    public byte[] Iv { get; set; }
-    public byte[] Salt { get; set; }
+    public required byte[] Iv { get; set; }
+    public required byte[] Salt { get; set; }
 
     public static CryptoInfo Create(string password,int keySize = 256, int blockSize = 128, int iteration = 10_000)
     {

@@ -3,10 +3,10 @@ using StackExchange.Redis;
 
 #region Setup Environments
 
-string _connectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING") ?? "127.0.0.1:6379";
-string _storageLocation = Environment.GetEnvironmentVariable("STORAGE_LOCATION") ?? @"C:\Users\amirs\Desktop\UUU";
+var connectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING") ?? "127.0.0.1:6379";
+var storageLocation = Environment.GetEnvironmentVariable("STORAGE_LOCATION") ?? @"/mnt/storage";
 
-string _timerInterval = args.Length <= 1 ? null ?? "00:10:00" : args[0]; // Every 10m
+var timerInterval = args.Length <= 1 ? null ?? "00:10:00" : args[0]; // Every 10m
 
 Console.WriteLine("Service started");
 
@@ -14,16 +14,15 @@ Console.WriteLine("Service started");
 
 #region Setup Redis connection
 
-ConnectionMultiplexer connectionMultiplexer;
 IDatabase database;
 ISubscriber subscriber;
 
 try
 {
-    connectionMultiplexer = ConnectionMultiplexer.Connect(_connectionString);
+    var connectionMultiplexer = ConnectionMultiplexer.Connect(connectionString);
     database = connectionMultiplexer.GetDatabase();
     subscriber = connectionMultiplexer.GetSubscriber();
-    MyConsole.WriteLineColor($"Connected to {connectionMultiplexer} at {_connectionString}", ConsoleColor.Green);
+    MyConsole.WriteLineColor($"Connected to {connectionMultiplexer} at {connectionString}", ConsoleColor.Green);
 }
 catch (RedisException e)
 {
@@ -34,20 +33,20 @@ catch (RedisException e)
 
 #region Listen for expiration
 // Redis notify-keyspace-events should be set to 'Ex'
-subscriber.Subscribe("__keyevent@0__:expired", (channel, key) =>
+subscriber.Subscribe(new RedisChannel("__keyevent@0__:expired", RedisChannel.PatternMode.Literal), (channel, key) =>
 {
     Console.WriteLine($"{key} was expired");
-    Directory.Delete(Path.Combine(_storageLocation, key.ToString()), true);
+    Directory.Delete(Path.Combine(storageLocation, key.ToString()), true);
 });
 #endregion
 
 #region Setup Timer for auto clean
-System.Timers.Timer timer = new System.Timers.Timer(TimeSpan.Parse(_timerInterval).TotalMilliseconds);
+System.Timers.Timer timer = new System.Timers.Timer(TimeSpan.Parse(timerInterval).TotalMilliseconds);
 timer.Elapsed += (sender, e) =>
 {
     int i = 0;
     MyConsole.WriteLineColor($"\tAuto cleaner execute at {e.SignalTime}", ConsoleColor.Blue);
-    string[] paths = Directory.GetDirectories(_storageLocation).Union(Directory.GetFiles(_storageLocation)).ToArray();
+    string[] paths = Directory.GetDirectories(storageLocation).Union(Directory.GetFiles(storageLocation)).ToArray();
 
     foreach (string path in paths)
     {

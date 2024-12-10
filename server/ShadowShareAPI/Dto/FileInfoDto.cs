@@ -4,9 +4,9 @@ namespace ShadowShareAPI.Dto;
 
 public class FileInfoDto
 {
-    public Entities.FileInfo FileInfo { get; set; }
+    public required Entities.FileInfo FileInfo { get; set; }
 
-    public Stream Stream { get; set; }
+    public required Stream Stream { get; set; }
 
     public static List<FileInfoDto> FromFileCollection(IFormFileCollection files)
     {

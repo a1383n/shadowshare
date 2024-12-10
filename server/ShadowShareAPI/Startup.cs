@@ -17,10 +17,10 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-        string connectionString = Configuration.GetConnectionString("DefaultConnection");
-        string defaultStorageLocation = Configuration.GetValue("StorageLocation","/mnt/storage");
+        var connectionString = Configuration.GetConnectionString("DefaultConnection");
+        string defaultStorageLocation = Configuration.GetValue("StorageLocation","/mnt/storage")!;
 
-        services.AddSingleton(new ApplicationDatabaseContext(connectionString));
+        services.AddSingleton(new ApplicationDatabaseContext(connectionString ?? "redis://localhost:6379"));
         services.AddSingleton<Data.Contracts.IFileRepository, Data.Repositories.FileRepository>();
         services.AddSingleton<Services.IFileService>(new Services.FileService(defaultStorageLocation));
     }

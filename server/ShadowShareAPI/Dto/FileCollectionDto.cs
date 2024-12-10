@@ -8,14 +8,14 @@ public class FileCollectionDto
 {
     [Required(ErrorMessage = "Please select at least one file.")]
     [FileValidation(MaxOverallFileSize = 10 * 1024 * 1024)]
-    public IFormFileCollection Files { get; set; }
+    public required IFormFileCollection Files { get; set; }
 
     [StringLength(32, MinimumLength = 4)]
     public string? Password { get; set; }
 
     [Required]
     [RegularExpression(@"^(?:[1-7]d|(?:[1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-3])h|(?:[1-9]|[1-5][0-9])m)$")]
-    public string DeleteAfter { get; set; }
+    public required string DeleteAfter { get; set; }
 
     [Required]
     [Range(1, 1000)]
