@@ -6,7 +6,7 @@ namespace Entities;
 public class FileCollection : BaseRedisEntity
 {
     [JsonPropertyOrder(1)]
-    public List<FileInfo> Files { get; set; }
+    public required List<FileInfo> Files { get; set; }
 
     [JsonPropertyOrder(4)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
