@@ -3,7 +3,8 @@ import {classNames} from "../../lib/utils/utils";
 import faqData from "../../data/faq.json";
 
 export default function Faq() {
-    return (<div>
+    return (
+        (<div>
             <div className="px-6 py-12 md:px-12 text-center lg:text-start">
                 <div className="container mx-auto my-5 mb-24">
                     <p className="text-3xl mb-10">سوالات متداول</p>
@@ -46,5 +47,6 @@ export default function Faq() {
                         </div>))}
                 </div>
             </div>
-        </div>);
+        </div>)
+    );
 }

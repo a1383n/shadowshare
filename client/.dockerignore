@@ -1,7 +1,6 @@
 # Ignore development files and directories
 node_modules
 .next
-out
 
 # Ignore files and directories generated during build
 .DS_Store
@@ -10,8 +9,6 @@ out
 .env.test.local
 .env.production.local
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Ignore Git files
 .git

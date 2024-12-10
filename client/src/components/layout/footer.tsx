@@ -9,7 +9,7 @@ interface Props {
 
 export default function Footer(props: Props) {
     return (
-        <div className="w-full bg-gray-300">
+        <div className="w-full bg-gray-300 flex-grow">
             <div className="container m-auto my-5">
                 <div className="flex flex-col items-center gap-y-2 justify-between">
                     <div className="flex flex-col justify-center items-center">
